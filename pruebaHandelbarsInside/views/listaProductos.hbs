@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/bootstrap.css" type="text/css">
+    <link href="./css/styles.css" rel="stylesheet" type="text/css">
+    {{!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> --}}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="../router/router.js"></script>   
+
+    <title>Document</title>
+</head>
+<body>
+
+    {{!-- HEADER --}}
+    {{!-- ME TRAIGO EL ARCHIVO HEADERS DE VIEWS/PARTIALS/HEADERS --}}
+    {{>headers}}
+    
+    <div class=" paginaPrincipal intro">
+      <div>
+          <h2 class="tituloMenu">Menu de productos</h2>
+      </div>
+
+      {{!-- BOTON PARA AGREGAR --}}
+      <div class="botonAgregar m-3">
+        <button  type="button" class="btn btn-warning clickBoton" data-toggle="modal" data-target="#myModalAdd">
+          Agreguar nuevo producto
+        </button>        
+      </div>
+
+
+      {{!-- TABLA --}}
+      <div class="tabla">          
+        <table class="table table-striped " id="mytable">
+          {{!-- CABECERA DE TABLA --}}      
+            <thead>
+              <tr>
+                <th scope="row" class="TituloTh">#</th>
+                <th scope="row" class="TituloTh">Producto</th>
+                <th scope="row" class="TituloTh d-none d-lg-table-cell ">Descripcion</th>
+                <th scope="row" class="TituloTh">Imagen</th>
+                <th scope="row" class="TituloTh">Importe</th>
+                <th scope="row" class="TituloTh">Acciones</th>
+              </tr>
+            </thead>
+            {{!-- BODY DE LA TABLA --}}
+            <tbody> 
+                <tr>
+                  <th scope="row"></th>
+                  <td colspan="6" class="categoria">Hamburguesas</td>
+                </tr>
+              {{#each products}}
+                {{!-- {{>producto}} --}}
+                <tr>
+                  <th scope="row">{{idProducto}}</td>
+                  <td >{{NombreProducto}}</td>
+                  <td class="d-none d-lg-table-cell">{{DescripcionProducto}}</td>
+                  <td><img src="{{PathImagenProducto}}"></td>
+                  <td> <h3>${{Precio}}</h3></td>              
+                  <td class="tablaBoton">
+                    <a href="javascript:void(0);" class="btn btn-info edit" 
+                    data-producto-id="{{ idProducto}}" 
+                    data-producto-nombre="{{ NombreProducto}}" 
+                    data-producto-Descripcion="{{ DescripcionProducto}}" 
+                    data-producto-path="{{PathImagenProducto}}" 
+                    data-producto-Precio="{{ Precio}}"
+                    data-producto-idcategoria ="{{IdCategoriaProducto}}" 
+                    data-producto-Estado="{{ EstadoProducto}}">Editar</a>
+                    
+                    <a href="javascript:void(0);" class="btn btn-danger delete" data-producto-id="{{ idProducto}}"> Eliminar</a>                    
+                    <a href="javascript:void(0);" class="btn btn-primary mdf" data-producto-Estado="{{ EstadoProducto}}" data-producto-id="{{ idProducto}}"> {{ IdCategoriaProducto}}</a>
+                    {{!-- <a href="javascript:void(0);" class="btn btn-primary mdf" data-producto-Estado="{{ EstadoProducto}}" data-producto-id="{{ idProducto}}"> {{ EstadoProducto}}</a> --}}
+                  </td>                  
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+      </div>
+    </div>
+    
+
+
+    {{!-- MODAL PARA AGREGAR PRODUCTO   FUNCIONA DE 10--}}
+    <form action="/save" method="post">       
+      <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Añadir producto</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <input type="text" name="NombreProducto" class="form-control pn" placeholder="Nombre producto" id="pn"  required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="DescripcionProducto" class="form-control pd" placeholder="descripcion" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="EstadoProducto" class="form-control pe" placeholder="Estado" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="PathImagenProducto" class="form-control pp" placeholder="path" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="Precio" class="form-control precio" placeholder="precio" required>
+              </div>                                
+              <div class="form-group">
+                  {{!-- <input type="text" name="pc" class="form-control pc" placeholder="id Categoria" required> --}}
+                  <label for="pc">Categoria de producto</label>
+                  <select name="IdCategoriaProducto" id="pc" class="btn btn-secondary dropdown-toggle form-control pc">
+                    {{#each categories}}
+                      <option value={{idCategoriaProducto}}>{{NombreProducto}}</option>
+                    {{/each}}
+                  </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalAddAñadirCategoria">
+                Agreguar Categoria
+              </button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary" id="btn">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+      {{!-- MODAL PARA AGREGAR CATEGORIA --}}
+    <form action="/saveCategoria" method="post">       
+      <div class="modal fade" id="myModalAddAñadirCategoria" tabindex="-1" role="dialog" aria-labelledby="añadirCategoriaModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="añadirCategoriaModalLabel">Añadir Categoria</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <input type="text" name="categoria" class="form-control añadirCategoria" placeholder="Nombre de Categoria" id="categoria" required>
+              </div>                      
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </div>   
+        </div>  
+      </div>
+    </form>
+    
+    {{!--MODAR PARA EDITAR PRODUCTO--}}
+    {{!-- Para cargar el valor en el form  --}}
+    <form action="/update" method="post">       
+      <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modificar producto</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <input type="text" name="idProducto" class="form-control idProducto" readonly placeholder="Nombre producto" id="idProducto"  required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="NombreProducto" class="form-control NombreProducto" placeholder="Nombre producto" id="NombreProducto" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="DescripcionProducto" class="form-control DescripcionProducto" placeholder="descripcion" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="EstadoProducto" class="form-control EstadoProducto" placeholder="Estado" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="path" class="form-control path" placeholder="path" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="pre" class="form-control Precio" placeholder="precio" required>
+              </div>                                
+              <div class="form-group">
+                  {{!-- <input type="text" name="pc" class="form-control pc" placeholder="id Categoria" required> --}}
+                  <label for="pc">Categoria de producto</label>
+                  <select name="IdCategoriaProducto" id="pc" class="btn btn-secondary dropdown-toggle form-control pc IdCategoriaProducto">
+                    {{#each categories}}
+                      <option value={{IdCategoriaProducto}}>{{NombreProducto}}</option>
+                    {{/each}}
+                  </select>
+                  
+              </div>
+            </div>
+            <div class="modal-footer">              
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary" id="btn">Actualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    {{!-- MODAL PARA DELETE PRODUCTO --}}
+
+        <form id="add-row-form" action="/borrar" method="post">
+            <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Borrar Producto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                    <strong>¿Estás seguro de borrar este elemento?</strong>
+                    </div>
+                    <div class="modal-footer">
+                      <input type="hidden" name="idProducto" class="form-control idProducto" required>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                      <button type="submit" class="btn btn-success">Eliminar</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </form>
+
+    {{!-- MODAL PARA MODIFICAR ESTADO --}}
+    <form id="add-row-form" action="/mdf" method="post">
+      <div class="modal fade" id="mdf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="myModalLabel">Modificar estado</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body">
+              <strong>¿Estás seguro que deseas modificar el estado?</strong>
+              </div>
+              <div class="modal-footer">
+                <input type="hidden" name="idProducto" class="form-control idProducto" required>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-success">Cambiar Estado</button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </form>
+
+
+</body>
+<script src="../js/bootstrap.js"></script>
+<script src="../js/main.js"></script>
+
+{{!-- <script type="text/javascript" src="../js/app.js"></script> --}}
+
+
+<script>
+$(document).ready(function(){
+    //Mostrar datos al modal para editar registro
+    //SCRIPT PARA MODIFICAR ESTADO
+    $('#mytable').on('click','.mdf',function(){
+      let idProducto = $(this).data('producto-id');
+      let EstadoProducto = $(this).data('producto-estado');
+      console.log(idProducto);
+      console.log(EstadoProducto);
+
+      $('#mdf').modal('show');
+      $('.idProducto').val(idProducto);
+      $('.e').val(EstadoProducto);
+    });
+
+
+    //SCRIPT PARA MODIFICAR PRODUCTO
+    $('#mytable').on('click', '.edit', function(){
+      //esta parte obtiene los valores 
+      let idProducto = $(this).data('producto-id');
+      let NombreProducto = $(this).data('producto-nombre');        
+      let DescripcionProducto = $(this).data('producto-descripcion');
+      let Precio = $(this).data('producto-precio');
+      let EstadoProducto = $(this).data('producto-estado');
+      let PathImagenProducto = $(this).data('producto-path');
+      let idCategoriaProducto = $(this).data('producto-idcategoria');
+
+      console.log("El id prudocto es: "+idProducto);
+      console.log("El nombre es: "+NombreProducto);
+      console.log("Descripcion: "+DescripcionProducto);
+      console.log("Precio: "+Precio);
+      console.log("Estado: "+EstadoProducto);
+      console.log("El path es : "+PathImagenProducto);
+      console.log("IdCategoria: "+idCategoriaProducto);
+      
+      
+      //esta parte es para mostrar los valores en el modal
+      $('#EditModal').modal('show');
+      $('.idProducto').val(idProducto);
+      $('.NombreProducto').val(NombreProducto);
+      $('.DescripcionProducto').val(DescripcionProducto);
+      $('.EstadoProducto').val(EstadoProducto);
+      $('.path').val(PathImagenProducto);
+      $('.Precio').val(Precio);
+      $('.idcategoria').val(idCategoriaProducto);
+    })    
+
+
+    $('#mytable').on('click', '.delete', function(){
+        let idProducto = $(this).data('producto-id');
+        $('#DeleteModal').modal('show');
+        $('.idProducto').val(idProducto);
+    })
+
+
+
+    
+    
+})
+</script>
+
+</html>
